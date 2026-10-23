@@ -1,178 +1,171 @@
-\# NexRide
+# NexRide – AI-Powered Public Transport System
 
+NexRide is a public transport project for Bengaluru. It brings together a Flutter rider app, a Python API, and an admin dashboard to support route search, bus information, and ticketing.
 
+---
 
-NexRide is a public transport project for Bengaluru. It includes a Flutter rider app, a FastAPI backend, and a browser-based admin dashboard.
+## 🔍 Problem Statement
 
+Public transport riders need a convenient way to find routes, check bus information, and manage tickets. NexRide brings these tasks together in one mobile app backed by a central API and an admin interface.
 
+---
 
-\## Project components
+## 🚀 Features
 
+- Rider registration, login, and OTP authentication
+- Search for routes between stops
+- View bus and estimated arrival information
+- Ticket booking and ticket details
+- Map and location screens
+- AI-assisted chat
+- Admin dashboard for transport data management
 
+---
 
-\- \*\*Rider app:\*\* Sign-in, route search, bus information, tickets, maps, chat, and profile screens.
+## 🧠 Tech Stack
 
-\- \*\*Backend API:\*\* Authentication, bus, route, stop, ticket, chat, and admin services.
+**Mobile App**
+- Flutter
+- Dart
+- Provider
+- GoRouter
+- Dio
 
-\- \*\*Admin dashboard:\*\* HTML, CSS, and JavaScript interface.
+**Backend**
+- Python
+- FastAPI
+- SQLAlchemy
+- MySQL
 
+**Admin Dashboard**
+- HTML
+- CSS
+- JavaScript
 
+**Integrations**
+- Gemini API for AI-assisted responses
+- Gmail SMTP for email and OTP features
+- Mapbox for map tiles
 
-\## Technology
+---
 
+## 🏗️ System Architecture
 
+1. Riders use the Flutter app to access transport features.
+2. The app sends requests to the FastAPI backend.
+3. The backend handles authentication, routes, buses, stops, tickets, chat, and admin requests.
+4. SQLAlchemy connects the backend to the MySQL database.
+5. API responses are displayed in the rider app or admin dashboard.
 
-\- Flutter and Dart
+---
 
-\- Python, FastAPI, SQLAlchemy, and MySQL
+## 🧪 How It Works
 
-\- HTML, CSS, and JavaScript
+- Riders sign in and search for routes or bus information.
+- The app communicates with the backend API over HTTP.
+- The backend reads or updates transport data in MySQL.
+- Chat and estimated arrival features provide additional travel assistance.
 
+---
 
-
-\## Requirements
-
-
-
-\- Flutter SDK (Dart SDK constraint: `>=3.0.0 <4.0.0`)
-
-\- Python 3.10 or newer
-
-\- MySQL
-
-
-
-\## Run the backend locally
-
-
-
-Create a MySQL database named `nexride`. Then, from the project folder:
-
-
-
-```cmd
-
-cd backend
-
-python -m venv .venv
-
-.venv\\Scripts\\activate
-
-pip install -r requirements.txt
-
-```
-
-
-
-Create `backend\\.env` with your local settings:
-
-
-
-```dotenv
-
-DB\_HOST=localhost
-
-DB\_PORT=3306
-
-DB\_NAME=nexride
-
-DB\_USER=root
-
-DB\_PASSWORD=your\_local\_mysql\_password
-
-
-
-SECRET\_KEY=replace\_with\_a\_long\_random\_value
-
-ALGORITHM=HS256
-
-ACCESS\_TOKEN\_EXPIRE\_MINUTES=60
-
-
-
-SMTP\_EMAIL=
-
-SMTP\_PASSWORD=
-
-OTP\_EXPIRE\_MINUTES=10
-
-GEMINI\_API\_KEY=
-
-```
-
-
-
-Start the API from the `backend` folder:
-
-
-
-```cmd
-
-uvicorn main:app --reload
-
-```
-
-
-
-The API runs at `http://localhost:8000`. Interactive API documentation is at `http://localhost:8000/docs`. The backend creates its database tables at startup.
-
-
-
-\## Run the Flutter app
-
-
-
-Open a second terminal in the project folder:
-
-
-
-```cmd
-
-cd nexride\_app
-
-flutter pub get
-
-flutter run --dart-define=MAPBOX\_ACCESS\_TOKEN=YOUR\_PUBLIC\_MAPBOX\_TOKEN
-
-```
-
-
-
-Use a \*\*public\*\* Mapbox token (`pk…`) for the client app. Keep secret credentials such as database passwords, JWT signing keys, SMTP passwords, and Gemini API keys out of Flutter code and the public repository.
-
-
-
-The app's API base URL is configured in `lib/core/constants/app\_constants.dart`. For a physical phone, set it to an address reachable from that device.
-
-
-
-\## Admin dashboard
-
-
-
-Open `admin\_dashboard/index.html` in a browser. The dashboard requires the backend API to be running and may need its API URL configured for your environment.
-
-
-
-\## Repository layout
-
-
+## 📂 Project Structure
 
 ```text
-
-admin\_dashboard/   Browser-based admin interface
-
-backend/           FastAPI application and requirements
-
-nexride\_app/       Flutter application
-
+Nexride/
+├── admin_dashboard/   # Browser-based admin interface
+├── backend/           # FastAPI application and database services
+└── nexride_app/       # Flutter rider application
 ```
 
+---
 
+## ▶️ How to Run
 
-\## Deployment note
+### 1. Clone the repository
 
+```bash
+git clone https://github.com/Pradhyumnajain23/Nexride.git
+cd Nexride
+```
 
+### 2. Start the backend
 
-Before deploying, replace development settings such as the default JWT secret, wildcard CORS policy, and local API URLs with production values. Never commit real credentials; `backend\\.env` is ignored by Git.
+Create a MySQL database named `nexride`. In the `backend` folder, create a `.env` file with your local database and service settings:
 
+```dotenv
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=nexride
+DB_USER=root
+DB_PASSWORD=your_local_mysql_password
+
+SECRET_KEY=replace_with_a_long_random_value
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+SMTP_EMAIL=
+SMTP_PASSWORD=
+OTP_EXPIRE_MINUTES=10
+GEMINI_API_KEY=
+```
+
+Install dependencies and start the API:
+
+```bash
+cd backend
+python -m venv .venv
+```
+
+On Windows:
+
+```cmd
+.venv\Scripts\activate
+```
+
+Then:
+
+```bash
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+The API runs at `http://localhost:8000`. API documentation is available at `http://localhost:8000/docs`.
+
+### 3. Start the Flutter app
+
+In a second terminal:
+
+```bash
+cd nexride_app
+flutter pub get
+flutter run --dart-define=MAPBOX_ACCESS_TOKEN=YOUR_PUBLIC_MAPBOX_TOKEN
+```
+
+Use a **public** Mapbox token (`pk…`) for the client app. Update the API base URL in `lib/core/constants/app_constants.dart` if testing from a physical device.
+
+### 4. Open the admin dashboard
+
+Open `admin_dashboard/index.html` in a browser and make sure its API URL points to the running backend.
+
+---
+
+## 🎯 Use Cases
+
+NexRide is designed for:
+
+- Public transport riders looking up routes and bus information
+- Riders managing tickets through a mobile app
+- Administrators managing transport data through a dashboard
+
+---
+
+## 👨‍💻 Author
+
+**Pradyumna J Jain**  
+GitHub: [Pradhyumnajain23](https://github.com/Pradhyumnajain23)
+
+---
+
+## 🔐 Security Note
+
+Keep database passwords, JWT signing keys, SMTP passwords, and Gemini API keys out of source code and GitHub. Store backend credentials in `backend/.env`. Before deploying, replace development settings such as local API URLs and wildcard CORS with production values.
