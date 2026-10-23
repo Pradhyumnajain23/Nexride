@@ -1,0 +1,8 @@
+backend/.envbackend/.env
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+backend/chat_test_output.txt
+backend/chat_results.md

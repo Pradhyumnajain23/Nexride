@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexRide Admin | Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Leaflet Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="dashboard-bg dark-mode">
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar glass-panel">
+        <div class="sidebar-header">
+            <div class="logo-circle-sm">
+                <i class="fa-solid fa-bus"></i>
+            </div>
+            <h3>NexRide</h3>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#" class="active" data-target="overview"><i class="fa-solid fa-gauge-high"></i> Overview</a>
+            </li>
+            <li><a href="#" data-target="tracking"><i class="fa-solid fa-location-dot"></i> Live Tracking</a></li>
+            <li><a href="#" data-target="routes"><i class="fa-solid fa-route"></i> Routes</a></li>
+            <li><a href="#" data-target="users"><i class="fa-solid fa-users"></i> Users</a></li>
+            <li><a href="#" data-target="tickets"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+            <li><a href="#" data-target="analytics"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="#" id="themeToggle"><i class="fa-solid fa-moon"></i> Theme</a>
+            <a href="#" id="logoutBtn" class="text-danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header glass-panel">
+            <div class="header-left">
+                <div style="display:flex; align-items:center;">
+                    <h2 id="pageTitle">Overview</h2>
+                    <span
+                        style="font-size:11px; font-weight:normal; background:rgba(34,197,94,0.15); color:var(--success); border:1px solid rgba(34,197,94,0.3); padding:3px 8px; border-radius:6px; margin-left:14px;">Demo
+                        Layout</span>
+                </div>
+                <div class="live-indicator" style="margin-left: 0; margin-top: 5px;">
+                    <span class="pulsing-dot"></span> Live System
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="admin-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=025EF5&color=fff&bold=true" alt="Admin">
+                    <span id="adminName">Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Panels Container -->
+        <div class="panels-container">
+
+            <!-- 2️⃣ OVERVIEW PANEL -->
+            <section id="panel-overview" class="panel active">
+
+                <!-- Stat Cards -->
+                <div class="stats-grid">
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon bg-primary"><i class="fa-solid fa-bus"></i></div>
+                        <div class="stat-info">
+                            <p>Active Buses</p>
+                            <h3 id="statBuses">--</h3>
+                        </div>
+                    </div>
+
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon bg-success"><i class="fa-solid fa-route"></i></div>
+                        <div class="stat-info">
+                            <p>Active Routes</p>
+                            <h3 id="statRoutes">--</h3>
+                        </div>
+                    </div>
+
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon bg-warning"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info">
+                            <p>Total Users</p>
+                            <h3 id="statUsers">--</h3>
+                        </div>
+                    </div>
+
+                    <div class="glass-card stat-card">
+                        <div class="stat-icon bg-danger"><i class="fa-solid fa-ticket"></i></div>
+                        <div class="stat-info">
+                            <p>Tickets Today</p>
+                            <h3 id="statTickets">--</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Charts and Alerts -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-top: 24px;">
+                    <!-- Main Chart -->
+                    <div class="glass-card stat-card"
+                        style="min-height: 300px; padding: 24px; display: flex; flex-direction: column;">
+                        <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-chart-area text-primary"></i> System
+                            Activity Overview <span
+                                style="font-size:10px; font-weight:normal; background:rgba(2,94,245,0.2); padding:2px 6px; border-radius:4px; margin-left:10px;">Example
+                                Data</span></h3>
+                        <div style="position: relative; flex-grow: 1; width: 100%;">
+                            <canvas id="overviewActivityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Alerts Panel -->
+                    <div class="glass-card widget-small">
+                        <h4>Recent Alerts</h4>
+                        <div class="empty-state">
+                            <i class="fa-solid fa-bell"></i>
+                            <p>No alerts</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EMPTY PLACEHOLDERS FOR OTHER PANELS -->
+            <section id="panel-tracking" class="panel">
+                <div class="tracking-layout">
+                    <div id="busMap" class="glass-card map-container"></div>
+                    <div class="glass-card bus-list-container">
+                        <h4 style="display:flex; align-items:center; justify-content:space-between;">Live Fleet <span
+                                style="font-size:9px; font-weight:500; background:rgba(2,94,245,0.2); color:var(--primary); padding:2px 6px; border-radius:4px;">BMTC
+                                Mock Data</span></h4>
+                        <div id="busFleetList" class="bus-list">
+                            <!-- buses populated here -->
+                            <div class="empty-state" style="margin-top: 50px;">
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                <p>Loading fleet data...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="panel-routes" class="panel">
+                <div class="glass-card table-container">
+                    <div class="table-header">
+                        <h3><i class="fa-solid fa-route text-success"></i> Active Routes <span
+                                style="font-size:10px; font-weight:normal; background:rgba(34,197,94,0.2); padding:2px 6px; border-radius:4px; margin-left:10px;">BMTC
+                                Example Data</span></h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Route</th>
+                                    <th>Crew Assignment</th>
+                                    <th>Journey</th>
+                                    <th>Duration</th>
+                                    <th>Fare</th>
+                                    <th>Crowd Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="routesTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center; padding:30px;"><i
+                                            class="fa-solid fa-spinner fa-spin"></i> Loading array elements...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="panel-users" class="panel">
+                <div class="glass-card table-container">
+                    <div class="table-header">
+                        <h3><i class="fa-solid fa-users text-info"></i> User Database <span
+                                style="font-size:10px; font-weight:normal; background:rgba(2,94,245,0.2); padding:2px 6px; border-radius:4px; margin-left:10px;">BMTC
+                                Example Data</span></h3>
+                        <div class="search-box">
+                            <i class="fa-solid fa-search" style="color: var(--text-secondary); margin-right: 10px;"></i>
+                            <input type="text" placeholder="Search users by name or email..."
+                                style="background:transparent; border:none; color:white; outline:none; width: 250px;">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Contact Info</th>
+                                    <th>Wallet</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align:center; padding:30px;"><i
+                                            class="fa-solid fa-spinner fa-spin"></i> Loading user data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="panel-tickets" class="panel">
+                <!-- Large Ticket Stream -->
+                <div class="glass-card stat-card full-height" style="padding: 24px;">
+                    <h4 style="margin-bottom: 20px;"><i class="fa-solid fa-bolt text-warning"></i> Live Ticket Stream
+                        <span
+                            style="font-size:10px; font-weight:normal; background:rgba(245,158,11,0.2); padding:2px 6px; border-radius:4px; margin-left:10px;">BMTC
+                            Example Data</span>
+                    </h4>
+                    <div id="ticketStreamContainer"
+                        style="height: calc(100vh - 180px); overflow-y: auto; padding-right: 12px; display: flex; flex-direction: column; gap: 16px;">
+                        <div style="text-align:center; padding: 40px; color:var(--text-secondary);">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i><br><br>Loading...
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </section>
+
+        <section id="panel-analytics" class="panel">
+            <div class="tracking-layout">
+                <!-- Revenue Chart -->
+                <div class="glass-card map-container" style="padding: 24px;">
+                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-chart-line text-primary"></i> Daily Revenue
+                        Streams <span
+                            style="font-size:10px; font-weight:normal; background:rgba(2,94,245,0.2); padding:2px 6px; border-radius:4px; margin-left:10px;">Example
+                            Data</span></h3>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Route Performance -->
+                <div class="glass-card sidebar-panel" style="padding: 24px;">
+                    <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-chart-pie text-warning"></i> Route Usage
+                        <span
+                            style="font-size:10px; font-weight:normal; background:rgba(245,158,11,0.2); padding:2px 6px; border-radius:4px; margin-left:10px;">Example
+                            Data</span>
+                    </h3>
+                    <div style="position: relative; height: 250px; width: 100%;">
+                        <canvas id="routeChart"></canvas>
+                    </div>
+                    <div style="margin-top:20px; font-size:13px; color:var(--text-secondary); text-align:center;">
+                        Data powered by Live Ticket Scans
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
